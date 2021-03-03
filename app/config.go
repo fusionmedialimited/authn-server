@@ -40,6 +40,8 @@ type Config struct {
 	PasswordMinComplexity       int
 	PasswordChangeLogout        bool
 	RefreshTokenTTL             time.Duration
+	RedisMasterName             string
+	RedisCluster                bool
 	RedisURL                    *url.URL
 	DatabaseURL                 *url.URL
 	SessionCookieName           string
@@ -225,6 +227,27 @@ var configurers = []configurer{
 		val, err := lookupURL("REDIS_URL")
 		if err == nil {
 			c.RedisURL = val
+		}
+		return err
+	},
+
+	// REDIS_MASTER_NAME is Redis Sentinel's master name
+	//
+	// Example: redis-master
+	func(c *Config) error {
+		if val, ok := os.LookupEnv("REDIS_MASTER_NAME"); ok {
+			c.RedisMasterName = val
+		}
+		return nil
+	},
+
+	// REDIS_CLUSTER is a boolean for a Redis cluster
+	//
+	// Example: redis://127.0.0.1:6379/11
+	func(c *Config) error {
+		val, err := lookupBool("REDIS_CLUSTER", false)
+		if err == nil {
+			c.RedisCluster = val
 		}
 		return err
 	},

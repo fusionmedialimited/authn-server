@@ -1,0 +1,9 @@
+FROM golang:alpine
+
+RUN set -ex; \
+    apk update; \
+    apk add --no-cache git make build-base
+
+WORKDIR /go/src/github.com/keratin/authn-server/
+
+CMD CGO_ENABLED=1 go test ./...

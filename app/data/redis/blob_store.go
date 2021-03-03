@@ -1,9 +1,10 @@
 package redis
 
 import (
+	"context"
 	"time"
 
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 	"github.com/pkg/errors"
 )
 
@@ -12,11 +13,11 @@ var placeholder = "generating"
 type BlobStore struct {
 	TTL      time.Duration
 	LockTime time.Duration
-	Client   *redis.Client
+	Client   redis.UniversalClient
 }
 
 func (s *BlobStore) Read(name string) ([]byte, error) {
-	blob, err := s.Client.Get(name).Result()
+	blob, err := s.Client.Get(context.Background(), name).Result()
 	if err == redis.Nil {
 		return nil, nil
 	} else if err != nil {
@@ -28,5 +29,5 @@ func (s *BlobStore) Read(name string) ([]byte, error) {
 }
 
 func (s *BlobStore) WriteNX(name string, blob []byte) (bool, error) {
-	return s.Client.SetNX(name, blob, s.TTL).Result()
+	return s.Client.SetNX(context.Background(), name, blob, s.TTL).Result()
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
 	dataRedis "github.com/keratin/authn-server/app/data/redis"
 	"github.com/keratin/authn-server/app/data/sqlite3"
@@ -19,7 +19,7 @@ type BlobStore interface {
 	WriteNX(name string, blob []byte) (bool, error)
 }
 
-func NewBlobStore(interval time.Duration, redis *redis.Client, db *sqlx.DB, reporter ops.ErrorReporter) (BlobStore, error) {
+func NewBlobStore(interval time.Duration, redis redis.UniversalClient, db *sqlx.DB, reporter ops.ErrorReporter) (BlobStore, error) {
 	// the lifetime of a key should be slightly more than two intervals
 	ttl := interval*2 + 10*time.Second
 

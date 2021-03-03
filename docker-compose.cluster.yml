@@ -1,0 +1,122 @@
+version: "3"
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - TEST_REDIS_URL=redis://redis-node-0
+      - REDIS_CLUSTER=true
+      - TEST_MYSQL_URL=mysql://root@mysql:3306/authnservertest
+      - TEST_POSTGRES_URL=postgres://postgres:password@postgres:5432/postgres?sslmode=disable
+    volumes:
+      - ".:/go/src/github.com/keratin/authn-server"
+    depends_on:
+      - redis-cluster
+    networks:
+      - app-tier
+
+  redis-cluster:
+    image: bitnami/redis-cluster:latest
+    depends_on:
+      - redis-node-0
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+      - redis-node-5
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - "REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5"
+      - REDIS_CLUSTER_REPLICAS=1
+      - REDIS_CLUSTER_CREATOR=yes
+    networks:
+      - app-tier
+    logging:
+      driver: none
+
+  redis-node-0:
+    image: bitnami/redis-cluster:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - "REDIS_NODES=redis-node-0 redis-node-1"
+    networks:
+      - app-tier
+    logging:
+      driver: none
+
+  redis-node-1:
+    image: bitnami/redis-cluster:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - "REDIS_NODES=redis-node-0 redis-node-1"
+    networks:
+      - app-tier
+    logging:
+      driver: none
+
+  redis-node-2:
+    image: bitnami/redis-cluster:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - "REDIS_NODES=redis-node-0 redis-node-1"
+    networks:
+      - app-tier
+    logging:
+      driver: none
+
+  redis-node-3:
+    image: bitnami/redis-cluster:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - "REDIS_NODES=redis-node-0 redis-node-1"
+    networks:
+      - app-tier
+    logging:
+      driver: none
+
+  redis-node-4:
+    image: bitnami/redis-cluster:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - "REDIS_NODES=redis-node-0 redis-node-1"
+    networks:
+      - app-tier
+    logging:
+      driver: none
+
+  redis-node-5:
+    image: bitnami/redis-cluster:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - "REDIS_NODES=redis-node-0 redis-node-1"
+    networks:
+      - app-tier
+    logging:
+      driver: none
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_PASSWORD
+    networks:
+      - app-tier
+    logging:
+      driver: none
+
+  postgres:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER
+      - POSTGRES_DB
+    networks:
+      - app-tier
+    logging:
+      driver: none

@@ -1,0 +1,55 @@
+version: "3"
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - TEST_REDIS_URL=redis://redis-sentinel:26379
+      - REDIS_MASTER_NAME=mymaster
+      - TEST_MYSQL_URL=mysql://root@mysql:3306/authnservertest
+      - TEST_POSTGRES_URL=postgres://postgres:password@postgres:5432/postgres?sslmode=disable
+    volumes:
+      - ".:/go/src/github.com/keratin/authn-server"
+    networks:
+      - app-tier
+
+  redis:
+    image: "bitnami/redis:latest"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - app-tier
+
+  redis-sentinel:
+    image: "bitnami/redis-sentinel:latest"
+    environment:
+      - REDIS_MASTER_HOST=redis
+    networks:
+      - app-tier
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_PASSWORD
+    networks:
+      - app-tier
+    logging:
+      driver: none
+
+  postgres:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER
+      - POSTGRES_DB
+    networks:
+      - app-tier
+    logging:
+      driver: none

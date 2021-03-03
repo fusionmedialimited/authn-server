@@ -174,7 +174,7 @@ jobs:
       - name: Push to Docker Hub
         uses: docker/build-push-action@v1
         with:
-          repository: keratin/authn-server
+          repository: gmaliar/authn-server
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           tags: latest,${{ steps.version.outputs.number }}

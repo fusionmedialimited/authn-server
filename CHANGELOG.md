@@ -4,6 +4,10 @@ Based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## HEAD
 
+### Added
+
+* add Redis Sentinel and Redis Cluster support
+
 ## 1.10.2
 
 ### Fixed

@@ -108,6 +108,26 @@ Format:
 
 * `redis://username:password@host:port/database_number`
 
+### `REDIS_MASTER_NAME`
+
+|           |    |
+| --------- | --- |
+| Required? | No |
+| Value | string |
+
+Redis Sentinel master name. Used for high availability and fault taulerant installations of Redis.
+
+### `REDIS_CLUSTER`
+
+|           |    |
+| --------- | --- |
+| Required? | No |
+| Value | boolean (`/^t|true|yes$/i`) |
+| Default | `false` |
+
+Redis Cluster flag.
+
+
 ## Sessions
 
 ### `ACCESS_TOKEN_TTL`
