@@ -10,7 +10,7 @@ require (
 	github.com/felixge/httpsnoop v1.0.0
 	github.com/getsentry/sentry-go v0.3.0
 	github.com/go-redis/redis v6.15.2+incompatible
-	github.com/go-redis/redis/v8 v8.6.0 // indirect
+	github.com/go-redis/redis/v8 v8.6.0
 	github.com/go-sql-driver/mysql v1.3.0
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/handlers v1.3.0
