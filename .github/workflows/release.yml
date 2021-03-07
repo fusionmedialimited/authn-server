@@ -30,6 +30,7 @@ jobs:
 
       - name: compress
         run: |
+          chmod +x dist/authn-linux64
           bzip2 -c dist/authn-linux64 > dist/authn-linux64.bz2
 
       - uses: actions/upload-artifact@v2
@@ -90,6 +91,7 @@ jobs:
 
       - name: compress
         run: |
+          chmod +x dist/authn-macos64
           bzip2 -c dist/authn-macos64 > dist/authn-macos64.bz2
 
       - uses: actions/upload-artifact@v2
@@ -163,6 +165,7 @@ jobs:
           bzip2 -d authn-linux64.bz2
           mkdir dist
           mv authn-linux64 dist
+          chmod +x dist/authn-linux64
 
       - name: VERSION
         id: version
@@ -183,5 +186,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
+          context: .
           push: true
           tags: gmaliar/authn-server:latest,gmaliar/authn-server:${{ steps.version.outputs.number }}
