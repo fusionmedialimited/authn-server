@@ -172,7 +172,7 @@ jobs:
           VERSION: ${{ github.ref }}
 
       - name: Push to Docker Hub
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           repository: gmaliar/authn-server
           username: ${{ secrets.DOCKERHUB_USERNAME }}
