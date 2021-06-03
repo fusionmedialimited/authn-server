@@ -1,0 +1,29 @@
+Project: site-refactoring
+product: authn
+version: 1.0
+slack: "#jenkins-gitops"
+
+stages:
+  lint: false
+  build:
+    baseImage: golang:1.15.6
+    dockerVars: -u 0:0 -e CGO_ENABLED=1 -e GOOS=linux -e GOARCH=amd64
+    script:
+      Prepare_module: go env -w GOSUMDB=off && go mod download
+#      Running_go_build: " go build -ldflags \"-X 'main.appVersion=${CommitID}'\" -a -installsuffix cgo -o app ."
+      Running_go_build: " go build -ldflags \"-extldflags -static -X main.VERSION=${CommitID}\" -o dist/authn-linux64"
+      Change_permissions: "chmod +x dist/authn-linux64"
+#  unitTest:
+#    baseImage: golang:1.15.6
+#    dockerVars: -u 0:0 -e CGO_ENABLED=0 -e GOOS=linux
+#    script:
+#      Running_unit_test: go test -v -coverprofile=cover.out -json ./... >> test-report.json
+#      Generate_coverage_Report: |
+#        gotestsum --junitfile junit.xml --raw-command cat test-report.json \
+#        && gocover-cobertura < cover.out > coverage.xml
+#    db:
+#      baseImage: redis:latest
+#      dockerVars: -p 6379:6379 --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+  dockerBuild: true
+  deploy: false
+  tagBuild: false

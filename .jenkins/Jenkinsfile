@@ -1,0 +1,12 @@
+@Library('jenkins-shared-libraries')
+import com.investing.products.*
+import com.investing.utilities.*
+
+properties([
+      buildDiscarder(logRotator(artifactDaysToKeepStr: '7',daysToKeepStr: '14')),
+      disableConcurrentBuilds()
+])
+
+def Job = new goBuild(this)
+def build = new BuildJob(this)
+build.runJob(Job)
